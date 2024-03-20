@@ -95,12 +95,32 @@ func (c *UserController) GetByRegistration() http.HandlerFunc {
 	}
 }
 
+// @Summary	Clock in by user registration
+//
+// @Tags		Users
+//
+// @ID			clock-in-by-user-registration
+// @Produce	json
+// @Param		id	path		string	true	"User Registration"
+// @Success	200	{object}	user.User
+// @Failure	404
+// @Router		/users/{registration}/clock-in [post]
 func (c *UserController) ClockIn() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
 
+// @Summary	Report by user registration
+//
+// @Tags		Users
+//
+// @ID			report-by-user-registration
+// @Produce	json
+// @Param		id	path		string	true	"User Registration"
+// @Success	200	{object}	user.User
+// @Failure	404
+// @Router		/users/{registration} [get]
 func (c *UserController) Report() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
