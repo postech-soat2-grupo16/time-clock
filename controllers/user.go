@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/go-chi/chi/v5"
 	"net/http"
+	"strconv"
 	"time-clock/adapters/user"
 	"time-clock/interfaces"
 	"time-clock/util"
@@ -19,7 +20,7 @@ func NewUserController(useCase interfaces.UserUserCase, r *chi.Mux) *UserControl
 		r.Post("/", controller.Create())
 		r.Get("/{registration}", controller.GetByRegistration())
 		r.Post("/{registration}/clock-in", controller.ClockIn())
-		r.Post("/{registration}/report/{month}", controller.Report())
+		r.Post("/{registration}/report", controller.Report())
 		r.Get("/health", controller.Health())
 	})
 	return &controller
@@ -139,7 +140,44 @@ func (c *UserController) ClockIn() http.HandlerFunc {
 // @Router		/users/{registration} [get]
 func (c *UserController) Report() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		yearStr := r.URL.Query().Get("year")
+		year, err := strconv.ParseInt(yearStr, 10, 32)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
 
+		monthStr := r.URL.Query().Get("month")
+		month, err := strconv.ParseInt(monthStr, 10, 32)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		dayStr := r.URL.Query().Get("day")
+		day, err := strconv.ParseInt(dayStr, 10, 32)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		registration := chi.URLParam(r, "registration")
+		userFound, err := c.useCase.GetByRegistration(registration)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if userFound == nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		report, err := c.useCase.Report(userFound.ID, uint32(year), uint32(month), uint32(day))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		json.NewEncoder(w).Encode(report)
 	}
 }
 

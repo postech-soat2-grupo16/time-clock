@@ -3,6 +3,7 @@ package user
 import (
 	"errors"
 	"gorm.io/gorm"
+	timeClockAdapter "time-clock/adapters/timeclock"
 	"time-clock/entities"
 	"time-clock/interfaces"
 )
@@ -52,5 +53,14 @@ func (u *UseCase) ClockIn(registration string) (*entities.TimeClock, error) {
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
+	return result, nil
+}
+
+func (u *UseCase) Report(userID, year, month, day uint32) ([]timeClockAdapter.TimeClock, error) {
+	result, err := u.timeClockGateway.Report(userID, year, month, day)
+	if err != nil {
+		return nil, err
+	}
+
 	return result, nil
 }
