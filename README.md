@@ -9,7 +9,7 @@
 </p>
 
 ## Sobre
-Time Clock API: Ssistema de ponto eletrônico para controle de horas trabalhadas.
+Time Clock API: Sistema de ponto eletrônico para controle de horas trabalhadas.
 
 ## Como Executar
 
