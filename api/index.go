@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time-clock/controllers"
 	"time-clock/external"
+	timeclockgateway "time-clock/gateways/db/timeclock"
 	usergateway "time-clock/gateways/db/user"
 	"time-clock/usecases/user"
 )
@@ -35,8 +36,9 @@ func mapRoutes(r *chi.Mux, orm *gorm.DB) {
 
 	// Gateways
 	userGateway := usergateway.NewGateway(orm)
+	timeClockGateway := timeclockgateway.NewGateway(orm)
 	// Use cases
-	userUseCase := user.NewUseCase(userGateway)
+	userUseCase := user.NewUseCase(userGateway, timeClockGateway)
 	// Handlers
 	_ = controllers.NewUserController(userUseCase, r)
 }

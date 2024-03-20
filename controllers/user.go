@@ -107,7 +107,23 @@ func (c *UserController) GetByRegistration() http.HandlerFunc {
 // @Router		/users/{registration}/clock-in [post]
 func (c *UserController) ClockIn() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		registration := chi.URLParam(r, "registration")
+		userFound, err := c.useCase.GetByRegistration(registration)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if userFound == nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
 
+		clockIn, err := c.useCase.ClockIn(userFound.Registration)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		json.NewEncoder(w).Encode(clockIn)
 	}
 }
 

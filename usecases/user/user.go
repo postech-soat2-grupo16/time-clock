@@ -9,11 +9,15 @@ import (
 )
 
 type UseCase struct {
-	userGateway interfaces.UserGatewayI
+	userGateway      interfaces.UserGatewayI
+	timeClockGateway interfaces.TimeClockGatewayI
 }
 
-func NewUseCase(userGateway interfaces.UserGatewayI) *UseCase {
-	return &UseCase{userGateway: userGateway}
+func NewUseCase(userGateway interfaces.UserGatewayI, timeClockGateway interfaces.TimeClockGatewayI) *UseCase {
+	return &UseCase{
+		userGateway:      userGateway,
+		timeClockGateway: timeClockGateway,
+	}
 }
 
 func (u *UseCase) Create(name, email, registration, password string) (*entities.User, error) {
@@ -34,6 +38,19 @@ func (u *UseCase) Create(name, email, registration, password string) (*entities.
 
 func (u *UseCase) GetByRegistration(registration string) (*entities.User, error) {
 	result, err := u.userGateway.GetByRegistration(registration)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (u *UseCase) ClockIn(registration string) (*entities.TimeClock, error) {
+	user, err := u.GetByRegistration(registration)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := u.timeClockGateway.ClockIn(user.ID)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
