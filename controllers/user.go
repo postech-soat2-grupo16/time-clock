@@ -19,7 +19,7 @@ func NewUserController(useCase interfaces.UserUserCase, r *chi.Mux) *UserControl
 		r.Post("/", controller.Create())
 		r.Get("/{registration}", controller.GetByRegistration())
 		r.Post("/{registration}/clock-in", controller.ClockIn())
-		r.Post("/{registration}/report", controller.Report())
+		r.Post("/{registration}/report/{month}", controller.Report())
 		r.Get("/health", controller.Health())
 	})
 	return &controller
