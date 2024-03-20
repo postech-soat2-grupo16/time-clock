@@ -1,0 +1,29 @@
+version: '3.9'
+services:
+  time_clock_app:
+    container_name: time_clock_app
+    image: jesmelo/postech-soat2-grupo16:latest
+    build: .
+    environment:
+      DATABASE_URL: "host=time_clock_db user=postgres password=postgres dbname=time_clock_db sslmode=disable TimeZone=UTC"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - time_clock_db
+  time_clock_db:
+    container_name: time_clock_db
+    image: postgres:15
+    user: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: time_clock_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./migration/init/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./migration/seeds/seeds.sql:/migration/seeds/seeds.sql
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:

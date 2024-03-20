@@ -1,0 +1,83 @@
+definitions:
+  user.User:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      registration:
+        type: string
+    type: object
+info:
+  contact:
+    email: support@timeclock.io
+    name: API Support
+    url: http://www.timeclock.io/support
+  description: Here you will find everything you need to have the best possible integration
+    with our APIs.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://timeclock.io/terms/
+  title: Time Clock API
+  version: "1.0"
+paths:
+  /user/health:
+    get:
+      operationId: health-check
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Health check
+      tags:
+      - Users
+  /users:
+    post:
+      operationId: create-user
+      parameters:
+      - description: User data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.User'
+        "400":
+          description: Bad Request
+      summary: Create a new user
+      tags:
+      - Users
+  /users/{registration}:
+    get:
+      operationId: get-user-by-registration
+      parameters:
+      - description: User Registration
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.User'
+        "404":
+          description: Not Found
+      summary: Get user by registration
+      tags:
+      - Users
+swagger: "2.0"
