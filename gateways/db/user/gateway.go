@@ -28,7 +28,7 @@ func (r *Repository) GetByRegistration(registration string) (*entities.User, err
 	user := entities.User{
 		Registration: registration,
 	}
-	result := r.repository.First(&user)
+	result := r.repository.Where("registration = ?", registration).First(&user)
 	if result.Error != nil {
 		return nil, result.Error
 	}

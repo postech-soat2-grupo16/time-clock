@@ -3,7 +3,6 @@ package user
 import (
 	"errors"
 	"gorm.io/gorm"
-	"log"
 	"time-clock/entities"
 	"time-clock/interfaces"
 )
@@ -30,7 +29,6 @@ func (u *UseCase) Create(name, email, registration, password string) (*entities.
 
 	result, err := u.userGateway.Save(user)
 	if err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 	return result, nil
