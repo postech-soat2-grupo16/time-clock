@@ -2,6 +2,7 @@ package user
 
 import (
 	"errors"
+	"fmt"
 	"gorm.io/gorm"
 	timeClockAdapter "time-clock/adapters/timeclock"
 	"time-clock/entities"
@@ -9,14 +10,18 @@ import (
 )
 
 type UseCase struct {
-	userGateway      interfaces.UserGatewayI
-	timeClockGateway interfaces.TimeClockGatewayI
+	userGateway         interfaces.UserGatewayI
+	timeClockGateway    interfaces.TimeClockGatewayI
+	notificationGateway interfaces.NotificationGatewayI
 }
 
-func NewUseCase(userGateway interfaces.UserGatewayI, timeClockGateway interfaces.TimeClockGatewayI) *UseCase {
+func NewUseCase(userGateway interfaces.UserGatewayI,
+	timeClockGateway interfaces.TimeClockGatewayI,
+	notificationGateway interfaces.NotificationGatewayI) *UseCase {
 	return &UseCase{
-		userGateway:      userGateway,
-		timeClockGateway: timeClockGateway,
+		userGateway:         userGateway,
+		timeClockGateway:    timeClockGateway,
+		notificationGateway: notificationGateway,
 	}
 }
 
@@ -32,6 +37,13 @@ func (u *UseCase) Create(name, email, registration, password string) (*entities.
 	if err != nil {
 		return nil, err
 	}
+
+	err = u.notificationGateway.ClientSubscriber(result)
+	if err != nil {
+		fmt.Printf("error subscribing")
+		return nil, err
+	}
+
 	return result, nil
 }
 

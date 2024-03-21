@@ -14,3 +14,8 @@ type TimeClockGatewayI interface {
 	ClockIn(userId uint32) (*entities.TimeClock, error)
 	Report(userID, year, month, day uint32) ([]timeClockAdapter.TimeClock, error)
 }
+
+type NotificationGatewayI interface {
+	ClientSubscriber(user *entities.User) error
+	SendNotification(texto string, user *entities.User) error
+}
