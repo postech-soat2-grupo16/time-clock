@@ -44,7 +44,7 @@ resource "aws_lb_target_group" "tg_timeclock_api" {
 # Listener Rule that forwards the request to timeclock-api TG
 resource "aws_lb_listener_rule" "listener_timeclock_api" {
   listener_arn = var.alb_fastfood_listener_arn
-  priority     = 400
+  priority     = 500
 
   condition {
     path_pattern {
