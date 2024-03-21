@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/aws/aws-sdk-go/service/sns"
 	"github.com/go-chi/chi/v5"
 	httpSwagger "github.com/swaggo/http-swagger"
 	"gorm.io/gorm"
@@ -9,6 +10,7 @@ import (
 	"time-clock/external"
 	timeclockgateway "time-clock/gateways/db/timeclock"
 	usergateway "time-clock/gateways/db/user"
+	"time-clock/gateways/notification"
 	"time-clock/usecases/user"
 )
 
@@ -19,16 +21,20 @@ func SetupDB() *gorm.DB {
 	return db
 }
 
-func SetupRouter(db *gorm.DB) *chi.Mux {
+func SetupNotification() *sns.SNS {
+	return external.GetSnsClient()
+}
+
+func SetupRouter(db *gorm.DB, sns *sns.SNS) *chi.Mux {
 	r := chi.NewRouter()
 	r.Use(commonMiddleware)
 
-	mapRoutes(r, db)
+	mapRoutes(r, db, sns)
 
 	return r
 }
 
-func mapRoutes(r *chi.Mux, orm *gorm.DB) {
+func mapRoutes(r *chi.Mux, orm *gorm.DB, sns *sns.SNS) {
 	// Swagger
 	r.Get("/swagger/*", httpSwagger.Handler())
 
@@ -37,8 +43,9 @@ func mapRoutes(r *chi.Mux, orm *gorm.DB) {
 	// Gateways
 	userGateway := usergateway.NewGateway(orm)
 	timeClockGateway := timeclockgateway.NewGateway(orm)
+	notificationGateway := notification.NewGateway(sns)
 	// Use cases
-	userUseCase := user.NewUseCase(userGateway, timeClockGateway)
+	userUseCase := user.NewUseCase(userGateway, timeClockGateway, notificationGateway)
 	// Handlers
 	_ = controllers.NewUserController(userUseCase, r)
 }

@@ -2,7 +2,10 @@ module time-clock
 
 go 1.20
 
-require github.com/lib/pq v1.10.9
+require (
+	github.com/aws/aws-sdk-go v1.51.4
+	github.com/lib/pq v1.10.9
+)
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
@@ -16,6 +19,7 @@ require (
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
