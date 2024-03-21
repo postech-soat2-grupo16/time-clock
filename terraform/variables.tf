@@ -5,17 +5,17 @@ variable "aws_region" {
 
 variable "vpc_id" {
   type    = string
-  default = "vpc-02704242632eb2597"
+  default = ""
 }
 
 variable "subnet_a" {
   type    = string
-  default = "subnet-0c485509fe2864438"
+  default = ""
 }
 
 variable "subnet_b" {
   type    = string
-  default = "subnet-000064d84790b3f77"
+  default = ""
 }
 
 variable "ecr_image" {
@@ -66,21 +66,14 @@ variable "alb_fastfood_listener_arn" {
 }
 
 variable "db_url" {
-  description = "Pagamentos DB URL"
-  type        = string
-  sensitive   = true
-  default     = ""
-}
-
-variable "sqs_url" {
-  description = "SQS Pagamentos URL"
+  description = "Hackathon DB URL"
   type        = string
   sensitive   = true
   default     = ""
 }
 
 variable "sns_arn" {
-  description = "SNS Pagamentos URL"
+  description = "SNS Hackathon URL"
   type        = string
   sensitive   = true
   default     = ""
