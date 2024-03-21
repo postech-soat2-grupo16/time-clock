@@ -3,10 +3,12 @@ package user
 import (
 	"errors"
 	"fmt"
-	"gorm.io/gorm"
 	timeClockAdapter "time-clock/adapters/timeclock"
 	"time-clock/entities"
 	"time-clock/interfaces"
+
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type UseCase struct {
@@ -26,11 +28,16 @@ func NewUseCase(userGateway interfaces.UserGatewayI,
 }
 
 func (u *UseCase) Create(name, email, registration, password string) (*entities.User, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+
 	user := entities.User{
 		Name:         name,
 		Email:        email,
 		Registration: registration,
-		Password:     password,
+		Password:     string(hash),
 	}
 
 	result, err := u.userGateway.Save(user)
