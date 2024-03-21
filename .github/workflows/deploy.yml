@@ -60,5 +60,4 @@ jobs:
           TF_VAR_sg_load_balancer: ${{ vars.SG_LOAD_BALANCER }}
           TF_VAR_ecs_cluster: ${{ vars.ECS_CLUSTER }}
           TF_VAR_sg_cluster_ecs: ${{ vars.SG_CLUSTER_ECS }}
-          TF_VAR_target_group_arn: ${{ vars.TARGET_GROUP_ARN }}
-          TF_VAR_db_url: ${{ secrets.DB_URL }}
+          TF_VAR_db_url: ${{ secrets.HACKATHON_DB_URL }}
