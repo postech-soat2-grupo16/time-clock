@@ -94,7 +94,6 @@ resource "aws_ecs_task_definition" "task_definition_timeclock_api" {
 
       environment = [
         { "name" : "DATABASE_URL", "value" : var.db_url },
-        { "name" : "QUEUE_URL", "value" : var.sqs_url },
         { "name" : "IS_LOCAL", "value" : "false" },
         { "name": "NOTIFICATION_TOPIC", "value" : var.sns_arn}
       ]
