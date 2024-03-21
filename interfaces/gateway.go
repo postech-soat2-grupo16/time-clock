@@ -1,6 +1,7 @@
 package interfaces
 
 import (
+	"time"
 	timeClockAdapter "time-clock/adapters/timeclock"
 	"time-clock/entities"
 )
@@ -12,7 +13,7 @@ type UserGatewayI interface {
 
 type TimeClockGatewayI interface {
 	ClockIn(userId uint32) (*entities.TimeClock, error)
-	Report(userID, year, month, day uint32) ([]timeClockAdapter.TimeClock, error)
+	Report(userID uint32, startDate, endDate time.Time) ([]timeClockAdapter.TimeClock, error)
 }
 
 type NotificationGatewayI interface {

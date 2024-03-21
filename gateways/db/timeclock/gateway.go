@@ -3,11 +3,9 @@ package timeclock
 import (
 	"gorm.io/gorm"
 	"log"
-	"strconv"
 	"time"
 	timeClockAdapter "time-clock/adapters/timeclock"
 	"time-clock/entities"
-	"time-clock/util"
 )
 
 type Repository struct {
@@ -33,10 +31,7 @@ func (r *Repository) ClockIn(userId uint32) (*entities.TimeClock, error) {
 	return &timeClock, nil
 }
 
-func (r *Repository) Report(userID, year, month, day uint32) ([]timeClockAdapter.TimeClock, error) {
-	startDate := strconv.Itoa(int(year)) + "-" + strconv.Itoa(int(month)) + "-" + strconv.Itoa(int(day))
-	endDate := util.GetLastDayMonth(int(year), int(month))
-
+func (r *Repository) Report(userID uint32, startDate, endDate time.Time) ([]timeClockAdapter.TimeClock, error) {
 	var timeClocks []timeClockAdapter.TimeClock
 
 	result := r.repository.Raw(

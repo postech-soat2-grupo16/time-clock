@@ -3,6 +3,7 @@ package user
 import (
 	"errors"
 	"fmt"
+	"time"
 	timeClockAdapter "time-clock/adapters/timeclock"
 	"time-clock/entities"
 	"time-clock/interfaces"
@@ -75,8 +76,8 @@ func (u *UseCase) ClockIn(registration string) (*entities.TimeClock, error) {
 	return result, nil
 }
 
-func (u *UseCase) Report(userID, year, month, day uint32) ([]timeClockAdapter.TimeClock, error) {
-	result, err := u.timeClockGateway.Report(userID, year, month, day)
+func (u *UseCase) Report(userID uint32, startDate, endDate time.Time) ([]timeClockAdapter.TimeClock, error) {
+	result, err := u.timeClockGateway.Report(userID, startDate, endDate)
 	if err != nil {
 		return nil, err
 	}
