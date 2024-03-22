@@ -3,10 +3,11 @@ package notification
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/sns"
 	"os"
 	"time-clock/entities"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/sns"
 )
 
 type Gateway struct {
@@ -61,8 +62,9 @@ func (g *Gateway) ClientSubscriber(user *entities.User) error {
 
 func (g *Gateway) SendNotification(texto string, user *entities.User) error {
 
-	notificationMessage := fmt.Sprintf("Relatorio do usuario %d, nome %s, registration %s",
+	notificationMessage := fmt.Sprintf("Relatorio do usuário %d, nome %s, registration %s",
 		user.ID, user.Name, user.Registration)
+	notificationMessage = fmt.Sprintf("%s\n%s", notificationMessage, texto)
 	fmt.Printf("Sending message: %s\n", notificationMessage)
 
 	//Build message
