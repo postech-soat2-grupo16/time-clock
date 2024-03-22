@@ -84,3 +84,9 @@ func (u *UseCase) Report(userID uint32, startDate, endDate time.Time) ([]timeClo
 
 	return result, nil
 }
+
+func (u *UseCase) GenerateMailReport(timeClock []timeClockAdapter.TimeClock, user *entities.User) error {
+	reportStr := timeClockAdapter.FormatTimeClocksForEmail(timeClock)
+	return u.notificationGateway.SendNotification(reportStr, user)
+
+}
