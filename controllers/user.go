@@ -144,22 +144,9 @@ func (c *UserController) ClockIn() http.HandlerFunc {
 // @Router		/users/{registration} [get]
 func (c *UserController) Report() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		startDateStr := r.URL.Query().Get("start_date")
-		startDate, err := time.Parse(dateFormat, startDateStr)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		endDateStr := r.URL.Query().Get("end_date")
-		endDate, err := time.Parse(dateFormat, endDateStr)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
 		timeTrackReportStr := r.URL.Query().Get("time_track_report")
 		var timeTrackReport bool
+		var err error
 		if timeTrackReportStr != "" {
 			timeTrackReport, err = strconv.ParseBool(timeTrackReportStr)
 			if err != nil {
@@ -168,10 +155,25 @@ func (c *UserController) Report() http.HandlerFunc {
 			}
 		}
 
+		var startDate, endDate time.Time
+		if !timeTrackReport {
+			startDate, endDate, err = GetStartDateEndDateFromURL(r)
+		}
+
 		if timeTrackReport {
 			now := time.Now()
 			startDate = time.Date(now.Year(), now.Month()-1, 1, 0, 0, 0, 0, time.UTC)
 			endDate = startDate.AddDate(0, 1, 0).Add(-time.Nanosecond)
+		}
+
+		sendEmailStr := r.URL.Query().Get("send_email")
+		var sendEmail bool
+		if sendEmailStr != "" {
+			sendEmail, err = strconv.ParseBool(sendEmailStr)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
 		}
 
 		registration := chi.URLParam(r, "registration")
@@ -191,7 +193,7 @@ func (c *UserController) Report() http.HandlerFunc {
 			return
 		}
 
-		if timeTrackReport {
+		if sendEmail {
 			err := c.useCase.GenerateMailReport(report, userFound)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -201,6 +203,21 @@ func (c *UserController) Report() http.HandlerFunc {
 
 		json.NewEncoder(w).Encode(report)
 	}
+}
+
+func GetStartDateEndDateFromURL(r *http.Request) (startDate time.Time, endDate time.Time, err error) {
+	startDateStr := r.URL.Query().Get("start_date")
+	startDate, err = time.Parse(dateFormat, startDateStr)
+	if err != nil {
+		return
+	}
+
+	endDateStr := r.URL.Query().Get("end_date")
+	endDate, err = time.Parse(dateFormat, endDateStr)
+	if err != nil {
+		return
+	}
+	return
 }
 
 // @Summary	Health check
