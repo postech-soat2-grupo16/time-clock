@@ -2,12 +2,14 @@ package controllers
 
 import (
 	"encoding/json"
-	"github.com/go-chi/chi/v5"
 	"net/http"
+	"strconv"
 	"time"
 	"time-clock/adapters/user"
 	"time-clock/interfaces"
 	"time-clock/util"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type UserController struct {
@@ -156,6 +158,22 @@ func (c *UserController) Report() http.HandlerFunc {
 			return
 		}
 
+		timeTrackReportStr := r.URL.Query().Get("time_track_report")
+		var timeTrackReport bool
+		if timeTrackReportStr != "" {
+			timeTrackReport, err = strconv.ParseBool(timeTrackReportStr)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+		}
+
+		if timeTrackReport == true {
+			now := time.Now()
+			startDate = time.Date(now.Year(), now.Month()-1, 1, 0, 0, 0, 0, time.UTC)
+			endDate = startDate.AddDate(0, 1, 0).Add(-time.Nanosecond)
+		}
+
 		registration := chi.URLParam(r, "registration")
 		userFound, err := c.useCase.GetByRegistration(registration)
 		if err != nil {
@@ -172,6 +190,15 @@ func (c *UserController) Report() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		if timeTrackReport == true {
+			err := c.useCase.GenerateMailReport(report, userFound)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+		}
+
 		json.NewEncoder(w).Encode(report)
 	}
 }

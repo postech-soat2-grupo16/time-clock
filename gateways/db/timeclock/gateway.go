@@ -1,11 +1,12 @@
 package timeclock
 
 import (
-	"gorm.io/gorm"
 	"log"
 	"time"
 	timeClockAdapter "time-clock/adapters/timeclock"
 	"time-clock/entities"
+
+	"gorm.io/gorm"
 )
 
 type Repository struct {
