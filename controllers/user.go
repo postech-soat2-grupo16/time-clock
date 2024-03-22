@@ -168,7 +168,7 @@ func (c *UserController) Report() http.HandlerFunc {
 			}
 		}
 
-		if timeTrackReport == true {
+		if timeTrackReport {
 			now := time.Now()
 			startDate = time.Date(now.Year(), now.Month()-1, 1, 0, 0, 0, 0, time.UTC)
 			endDate = startDate.AddDate(0, 1, 0).Add(-time.Nanosecond)
@@ -191,7 +191,7 @@ func (c *UserController) Report() http.HandlerFunc {
 			return
 		}
 
-		if timeTrackReport == true {
+		if timeTrackReport {
 			err := c.useCase.GenerateMailReport(report, userFound)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
