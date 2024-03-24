@@ -1,4 +1,12 @@
 # HACKATON SOAT2 GRUPO 16
+
+## Integrantes:
+- Pedro Vitor Jhum Haramoto
+- Jorge Eugenio Souza de Melo
+- Joao Vitor Campari Racchetti
+- Thiago Oliveira Camargo
+
+
 ![Go v1.20](https://img.shields.io/badge/go-v1.20-blue)
 
 <p align="center">
@@ -28,3 +36,17 @@ Após isso, basta executar o comando `make test`, que fará com que a base de da
 Este projeto conta com Swagger para especificação e documentação da API. Para visualizar, basta executar localmente o projeto, como indicado na seção [Como Executar](#como-executar). E então acessar o link abaixo:
 
 `http://localhost:8000/swagger/index.html`
+
+## Entregáveis mínimos
+### Desenho de solução MVP
+![Desenho de solução MVP](./gdocs/FASE_1.drawio.png)
+### Desenho da solução evolutiva (FASE 2)
+![Desenho da solução evolutiva](./gdocs/FASE_2.drawio.png)
+### Demonstração da infra na cloud / Demonstração da esteira de CI/CD / Demonstração do MVP
+- Link para o vídeo da demonstração do MVP: [Vídeo](https://www.youtube.com/watch?v=bJHLvNFdpAo)
+
+## Outros repositórios
+- [Lambda Authentication](https://github.com/postech-soat2-grupo16/hackathon-lambda-authentication)
+- [Lambda Authorization](https://github.com/postech-soat2-grupo16/hackathon-lambda-authorization)
+- [Infra DB](https://github.com/postech-soat2-grupo16/hackathon-infra-db)
+- [Infra SNS](https://github.com/postech-soat2-grupo16/hackathon-infra-sns)
